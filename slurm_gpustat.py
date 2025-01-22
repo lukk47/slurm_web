@@ -34,7 +34,7 @@ from django.utils.functional import lazy
 
 # SLURM states which indicate that the node is not available for submitting jobs
 INACCESSIBLE = {"drain*", "down*", "drng", "drain", "down"}
-INTERACTIVE_CMDS = {"bash", "zsh", "sh"}
+INTERACTIVE_CMDS = {"bash", "zsh", "sh","/bin/bash"}
 
 
 class Daemon:
@@ -392,8 +392,9 @@ def get_gpu_partitions(keywords=['gpu', 'ddp']) -> list:
     partitions = set()
     for row in rows:
         par = row.split()[0]
-        if any([k in par for k in keywords]):
-            partitions.add(par)
+        par = par.replace('*','')
+        # if any([k in par for k in keywords]):
+        partitions.add(par)
     return sorted(list(partitions))
 
 
@@ -623,6 +624,7 @@ def gpu_usage(resources: dict, partition: Optional[str] = None) -> dict:
        resource_flag = "gres"
     else:
        resource_flag = "tres-per-node"
+       resource_flag = "tres-per-job"
     if int(slurm_version[0:2]) >= 21:
         gpu_identifier = 'gres:gpu'
     else:
@@ -811,7 +813,7 @@ def main():
                         help="the location where the daemon PID file will be stored")
     parser.add_argument("--daemon_log_interval", type=int, default=43200,
                         help="time interval (secs) between stat logging (default 12 hrs)")
-    parser.add_argument("--color", type=int, default=1, help="color output")
+    parser.add_argument("--color", type=int, default=0, help="color output")
     parser.add_argument("--verbose", action="store_true",
                         help="provide a more detailed breakdown of resources")
     args = parser.parse_args()
@@ -833,6 +835,7 @@ def main():
         elif args.action == "daemon-stop":
             print("Stopping daemon")
             daemon.stop()
+    print(get_gpu_partitions())
 
 
 if __name__ == "__main__":

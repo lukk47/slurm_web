@@ -3,13 +3,13 @@
 
 <head>
     <meta charset="utf-8"/>
-    <title>Triton-Monitor</title>
+    <title>Canele cluster Monitor</title>
 </head>
 <script src=
 "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js">
     </script>
 <header>
-    <h1>VGG Triton Monitor: {{ hostname }}</h1>
+    <h1>Canele cluster Monitor: {{ hostname }}</h1>
     <button style="float: right;" onclick="ToggleDarkFn()">Toggle Dark Mode</button>
      
     <script>
@@ -103,7 +103,7 @@
 <br> -->
 
 <hr>
-<details>
+<details open>
     <summary style="cursor: pointer;font-size:1.5em;font-weight: bold;margin-block-start: 0.83em;margin-block-end: 0.83em;"> GPU Leaderboard</summary>
 <pre class='terminal' id="leaderboard"> </pre>
 </details>
@@ -116,16 +116,16 @@
 </details>
 <br>
 
-<hr>
+<!-- <hr>
 <details open>
     <summary style="cursor: pointer;font-size:1.5em;font-weight: bold;margin-block-start: 0.83em;margin-block-end: 0.83em;"> Disk I/O (measured by reading a 512MB file)</summary>
     <div class='table_big' id='disk_io'> </div>
 </details>
-<br>
+<br> -->
 
 <hr>
 <details open>
-    <summary style="cursor: pointer;font-size:1.5em;font-weight: bold;margin-block-start: 0.83em;margin-block-end: 0.83em;"> Waiting Queue</summary>
+    <summary style="cursor: pointer;font-size:1.5em;font-weight: bold;margin-block-start: 0.83em;margin-block-end: 0.83em;"> Job Queue</summary>
 <pre class='terminal' id="queue"> </pre>
 </details>
 
@@ -134,12 +134,12 @@
 
 <footer>
     <hr>
-    <p>Ref: VGG Triton info page 
+    <!-- <p>Ref: VGG Triton info page 
         (<a href="https://www.robots.ox.ac.uk/~vgg/internal/wiki/doku.php/triton"
         >https://www.robots.ox.ac.uk/~vgg/internal/wiki/doku.php/triton</a>)</p>
     <p>Source code: <a href="https://github.com/TengdaHan/slurm_web"
-        >https://github.com/TengdaHan/slurm_web</a>
-    <p>Contact: Tengda Han (htd@robots.ox.ac.uk) </p>
+        >https://github.com/TengdaHan/slurm_web</a> -->
+    <p>Contact: lu kangkang (luk@i2r.a-star.edu.sg) </p>
 </footer>
 
 </html>
@@ -160,17 +160,17 @@
             });
         }, interval);
 
-    var disk_io = document.getElementById("disk_io");
-    fetch("{{ url_for('disk_io') }}")
-        .then(response => {
-                response.text().then(t => {disk_io.innerHTML = t;darkMode();})
-            });
-    setInterval(() => {
-        fetch("{{ url_for('disk_io') }}")
-        .then(response => {
-                response.text().then(t => {disk_io.innerHTML = t;darkMode();})
-            });
-        }, 1000 * 60 * 15);
+    // var disk_io = document.getElementById("disk_io");
+    // fetch("{{ url_for('disk_io') }}")
+    //     .then(response => {
+    //             response.text().then(t => {disk_io.innerHTML = t;darkMode();})
+    //         });
+    // setInterval(() => {
+    //     fetch("{{ url_for('disk_io') }}")
+    //     .then(response => {
+    //             response.text().then(t => {disk_io.innerHTML = t;darkMode();})
+    //         });
+    //     }, 1000 * 60 * 15);
 
     var resource = document.getElementById("resource");
     fetch("{{ url_for('resource') }}")

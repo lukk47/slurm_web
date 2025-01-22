@@ -67,10 +67,10 @@ def parse_leaderboard(sum_by_gmem=[48]):
                                                                reverse=True)]
         summary_str = ''.join([f'{i:12s}' for i in user_summary])
         num_new_gpus = [val for key, val in subdict['n_gpu'].items() if key not in OLD_GPU_TYPES]
-        for gm in sum_by_gmem:
-            total += f"|{gm}g={str(sum([val for key, val in subdict['n_gpu'].items() if key in GMEM and GMEM[key] == f'[{gm}g]'])):2s}"
-        total += f"|newer={str(sum(num_new_gpus)):2s}"
-        total += f"|bash={str(sum(subdict['bash_gpu'].values())):2s}"
+        # for gm in sum_by_gmem:
+        #     total += f"|{gm}g={str(sum([val for key, val in subdict['n_gpu'].items() if key in GMEM and GMEM[key] == f'[{gm}g]'])):2s}"
+        # total += f"|newer={str(sum(num_new_gpus)):2s}"
+        total += f"|interactive={str(sum(subdict['bash_gpu'].values())):2s}"
         out += f"{user:12s}[{total}]    {summary_str}\n"
     return out
 
@@ -101,10 +101,10 @@ def parse_leaderboard_by_partition(sum_by_gmem=[48]):
                                                                 reverse=True)]
             summary_str = ''.join([f'{i:12s}' for i in user_summary])
             num_new_gpus = [val for key, val in subdict['n_gpu'].items() if key not in OLD_GPU_TYPES]
-            for gm in sum_by_gmem:
-                total += f"|{gm}g={str(sum([val for key, val in subdict['n_gpu'].items() if key in GMEM and GMEM[key] == f'[{gm}g]'])):2s}"
-            total += f"|newer={str(sum(num_new_gpus)):2s}"
-            total += f"|bash={str(sum(subdict['bash_gpu'].values())):2s}"
+            # for gm in sum_by_gmem:
+            #     total += f"|{gm}g={str(sum([val for key, val in subdict['n_gpu'].items() if key in GMEM and GMEM[key] == f'[{gm}g]'])):2s}"
+            # total += f"|newer={str(sum(num_new_gpus)):2s}"
+            total += f"|interactive={str(sum(subdict['bash_gpu'].values())):2s}"
             out += f"{user:12s}[{total}]    {summary_str}\n"            
     out += "=" * 64 + "\n"
     return out
@@ -350,7 +350,8 @@ def parse_usage_to_table(show_bar=True):
 def parse_queue_to_table():
     """Request pending queue, keep the raw formatting."""
     
-    out = parse_cmd('squeue -t PENDING')
+    # out = parse_cmd('squeue -t PENDING')
+    out = parse_cmd('squeue -o "%.18i %.9P %.8j %.20u %.2t %.10M %.6D %R"')
     out = '\n'.join(out)
     return out
 
@@ -412,9 +413,10 @@ def parse_disk_io():
 
 def main():
     parser = argparse.ArgumentParser(description="launch web app")
-    parser.add_argument("--host", default='triton.robots.ox.ac.uk',
+    # parser.add_argument("--host", default='10.2.57.100',
+    parser.add_argument("--host", default='10.2.57.100',
                         help="the host address for the website")
-    parser.add_argument("--port", default=2070,
+    parser.add_argument("--port", default=8090,
                         help="the port for the website")
     args = parser.parse_args()
 
@@ -427,7 +429,7 @@ def main():
     @app.route('/time_feed')
     def time_feed():
         def generate():
-            yield f'updated at: {datetime.now(pytz.timezone("Europe/London")).strftime("%Y.%m.%d | %H:%M:%S")}'
+            yield f'updated at: {datetime.now(pytz.timezone("Asia/Singapore")).strftime("%Y.%m.%d | %H:%M:%S")}'
         return Response(generate(), mimetype='text')
 
     @app.route('/resource')
