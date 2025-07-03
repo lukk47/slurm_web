@@ -1,0 +1,14 @@
+[Unit]
+Description=Init the slurm web interface at boot
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/python3 /data/canele/slurm_web/app.py
+WorkingDirectory=/data/canele/slurm_web
+StandardOutput=inherit
+StandardError=inherit
+Restart=always
+User=canele
+
+[Install]
+WantedBy=multi-user.target
